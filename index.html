@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo Globo - Aplicação Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .title-arial-black {
+            font-family: 'Arial Black', sans-serif;
+        }
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            /* Adicionado display flex para centralizar */
+            display: flex;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            color: #333;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        .loading-indicator {
+            display: none;
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        .problem-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        /* Esconder páginas por padrão */
+        #servicesBanner, #eletrodieselBanner, #retificaBanner {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Página Principal -->
+    <div id="mainPage" class="bg-white rounded-lg shadow-xl py-12 px-8 max-w-2xl w-full flex flex-col items-center text-center">
+        <img src="logo_grupo_globo.png" alt="Logo Grupo Globo" class="mx-auto mb-4 h-auto" style="max-width: 300px;">
+        <p class="title-arial-black text-sm font-extrabold text-red-600 mb-12">
+            A NÚMERO 1 EM TECNOLOGIA PARA REPARAÇÃO DE MOTORES
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center space-y-6 sm:space-y-0 sm:space-x-8 mb-12">
+            <button onclick="showPage('servicesBanner')" class="inline-block bg-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-4">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.837-2.765.6-1.999 2.088a1.532 1.532 0 01-.582 2.286c-1.56.38-1.56 2.6 0 2.98a1.532 1.532 0 01.582 2.286c-.766 1.488.6 2.82 1.999 2.088a1.532 1.532 0 012.286.948c.38 1.56 2.6 1.56 2.98 0a1.532 1.532 0 012.286-.948c1.372.837 2.765-.6 1.999-2.088a1.532 1.532 0 01.582-2.286c1.56-.38 1.56-2.6 0-2.98a1.532 1.532 0 01-.582-2.286c.766-1.488-.6-2.82-1.999-2.088a1.532 1.532 0 01-2.286-.948zM10 10a3 3 0 11-6 0 3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                <span class="text-sm">GLOBO TURBINA</span>
+            </button>
+            <button onclick="showPage('eletrodieselBanner')" class="inline-block bg-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-4">
+                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-1 1v1h2V3a1 1 0 00-1-1zM7 5H5a2 2 0 00-2 2v6a2 2 0 002 2h2v1a1 1 0 102 0v-1h2v1a1 1 0 102 0v-1h2a2 2 0 002-2V7a2 2 0 00-2-2h-2V3a1 1 0 00-1-1H9zM5 7h10v6H5V7z" clip-rule="evenodd"></path></svg>
+                <span class="text-sm">GLOBO ELETRODIESEL</span>
+            </button>
+            <button onclick="showPage('retificaBanner')" class="inline-block bg-blue-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-4">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                <span class="text-sm">GLOBO RETIFICA</span>
+            </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between items-center w-full mt-auto pt-6 border-t border-gray-300 space-y-4 sm:space-y-0">
+            <div class="flex flex-col items-center sm:items-start">
+                <p class="title-arial-black text-sm font-extrabold text-red-600">REPRESENTANTE COMERCIAL</p>
+                <p class="title-arial-black text-sm font-extrabold text-red-600">ALISON B. RIBEIRO</p>
+                <a href="https://wa.me/5527995072994" target="_blank" class="flex items-center space-x-1 text-green-600 hover:text-green-700 mt-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.58 3.58a10 10 0 10-9.16 9.16c0 1.65.4 3.21 1.13 4.6L3 18.88l1.54-.52a9.96 9.96 0 004.6 1.13 10 10 0 009.16-9.16 9.96 9.96 0 00-1.13-4.6L16.88 3l-.52 1.54zm-3.58 9.95c-.2-.1-.59-.29-.68-.33-.09-.04-.16-.06-.22.06-.07.12-.26.33-.32.39-.06.06-.12.07-.22.02-.1-.04-1.14-.42-2.17-1.34-.8-.72-1.34-1.61-1.49-1.89-.15-.28-.01-.43.09-.55.09-.1.2-.26.29-.39.1-.12.13-.2.2-.33.06-.12.03-.22-.02-.33-.04-.1-.46-1.1-.63-1.5-.17-.4-.34-.34-.46-.34h-.22c-.1 0-.26.03-.39.15-.13.12-.5.48-.5 1.18s.51 1.37.58 1.47c.07.1 1.01 1.61 2.45 2.28.34.16.6.26.81.33.3.1.55.09.75-.06.23-.17.68-.78.78-.93.1-.15.1-.28.07-.33z"></path></svg>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            <button onclick="openDiagnosisModal()" class="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 text-lg font-bold shadow-lg">
+                Diagnóstico Rápido ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Página Globo Turbinas -->
+    <div id="servicesBanner" class="bg-white text-gray-800 rounded-lg shadow-md p-8 max-w-4xl w-full flex flex-col items-center text-center">
+        <button onclick="showPage('mainPage')" class="self-start mb-6 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 text-base">
+            &larr; Voltar
+        </button>
+        <div class="mb-8 p-4 bg-white rounded-lg shadow-inner">
+            <h2 class="text-3xl font-extrabold tracking-tight text-blue-800">GLOBO TURBINAS</h2>
+        </div>
+        <h1 class="text-xl font-extrabold mb-6 tracking-tight text-red-600">SERVIÇOS OFERECIDOS</h1>
+        <ul class="text-sm list-disc list-inside space-y-3 mb-10 text-left w-full max-w-md text-blue-800">
+            <!-- Lista de serviços com botão Saiba Mais -->
+            <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    TURBINA
+                </span>
+                <button onclick="getServiceDescription('TURBINA', 'Reparo e manutenção de turbinas para todos os tipos de veículos e motores.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    SETOR DE DIREÇÃO
+                </span>
+                <button onclick="getServiceDescription('SETOR DE DIREÇÃO', 'Manutenção e reparo de sistemas de direção hidráulica e mecânica.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    COMPRESSOR
+                </span>
+                <button onclick="getServiceDescription('COMPRESSOR', 'Serviços especializados em compressores de ar para sistemas de freio e outros.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    BOMBA HIDRÁULICA
+                </span>
+                <button onclick="getServiceDescription('BOMBA HIDRÁULICA', 'Reparo e manutenção de bombas hidráulicas para diversas aplicações.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    CUICA DE FREIO
+                </span>
+                <button onclick="getServiceDescription('CUICA DE FREIO', 'Manutenção e reparo de cuícas de freio para sistemas pneumáticos.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    COLETOR DE ESCAPE
+                </span>
+                <button onclick="getServiceDescription('COLETOR DE ESCAPE', 'Reparo e solda especializada em coletores de escape.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    SECADOR DE AR
+                </span>
+                <button onclick="getServiceDescription('SECADOR DE AR', 'Manutenção de secadores de ar para sistemas pneumáticos.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    SISTEMA PNEUMÁTICO EM GERAL
+                </span>
+                <button onclick="getServiceDescription('SISTEMA PNEUMÁTICO EM GERAL', 'Diagnóstico e reparo completo de sistemas pneumáticos veiculares.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+        </ul>
+        <!-- Rodapé repetido -->
+         <div class="flex flex-col sm:flex-row justify-between items-center w-full mt-auto pt-6 border-t border-gray-300 space-y-4 sm:space-y-0">
+            <div class="flex flex-col items-center sm:items-start">
+                <p class="title-arial-black text-sm font-extrabold text-red-600">REPRESENTANTE COMERCIAL</p>
+                <p class="title-arial-black text-sm font-extrabold text-red-600">ALISON B. RIBEIRO</p>
+                <a href="https://wa.me/5527995072994" target="_blank" class="flex items-center space-x-1 text-green-600 hover:text-green-700 mt-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.58 3.58a10 10 0 10-9.16 9.16c0 1.65.4 3.21 1.13 4.6L3 18.88l1.54-.52a9.96 9.96 0 004.6 1.13 10 10 0 009.16-9.16 9.96 9.96 0 00-1.13-4.6L16.88 3l-.52 1.54zm-3.58 9.95c-.2-.1-.59-.29-.68-.33-.09-.04-.16-.06-.22.06-.07.12-.26.33-.32.39-.06.06-.12.07-.22.02-.1-.04-1.14-.42-2.17-1.34-.8-.72-1.34-1.61-1.49-1.89-.15-.28-.01-.43.09-.55.09-.1.2-.26.29-.39.1-.12.13-.2.2-.33.06-.12.03-.22-.02-.33-.04-.1-.46-1.1-.63-1.5-.17-.4-.34-.34-.46-.34h-.22c-.1 0-.26.03-.39.15-.13.12-.5.48-.5 1.18s.51 1.37.58 1.47c.07.1 1.01 1.61 2.45 2.28.34.16.6.26.81.33.3.1.55.09.75-.06.23-.17.68-.78.78-.93.1-.15.1-.28.07-.33z"></path></svg>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            <button onclick="openDiagnosisModal()" class="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 text-lg font-bold shadow-lg">
+                Diagnóstico Rápido ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Página Globo Eletrodiesel -->
+    <div id="eletrodieselBanner" class="bg-white text-gray-800 rounded-lg shadow-md p-8 max-w-4xl w-full flex flex-col items-center text-center">
+        <button onclick="showPage('mainPage')" class="self-start mb-6 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 text-base">
+            &larr; Voltar
+        </button>
+        <div class="mb-8 p-4 bg-white rounded-lg shadow-inner">
+            <h2 class="text-3xl font-extrabold tracking-tight text-blue-800">GLOBO ELETRODIESEL</h2>
+        </div>
+        <h1 class="text-xl font-extrabold mb-6 tracking-tight text-red-600">SERVIÇOS OFERECIDOS</h1>
+        <ul class="text-sm list-disc list-inside space-y-3 mb-10 text-left w-full max-w-md text-blue-800">
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    BOMBA DE ALTA
+                </span>
+                <button onclick="getServiceDescription('BOMBA DE ALTA', 'Reparo e teste de bombas de alta pressão para sistemas Common Rail.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    UNIDADE
+                </span>
+                <button onclick="getServiceDescription('UNIDADE', 'Manutenção e reparo de unidades injetoras eletrônicas.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    BOMBA INJETORA
+                </span>
+                <button onclick="getServiceDescription('BOMBA INJETORA', 'Reparo e calibração de bombas injetoras diesel mecânicas e eletrônicas.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    BICO INJETOR
+                </span>
+                <button onclick="getServiceDescription('BICO INJETOR', 'Limpeza, teste e reparo de bicos injetores Common Rail e mecânicos.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    DIAGNÓSTICO COMPUTADORIZADO
+                </span>
+                <button onclick="getServiceDescription('DIAGNÓSTICO COMPUTADORIZADO', 'Diagnóstico avançado com scanners para identificação precisa de falhas.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    SISTEMA CATERPILLAR
+                </span>
+                <button onclick="getServiceDescription('SISTEMA CATERPILLAR', 'Especialistas em diagnóstico e reparo de sistemas de injeção Caterpillar.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    LINHA VERDE
+                </span>
+                <button onclick="getServiceDescription('LINHA VERDE', 'Serviços para motores e sistemas de veículos agrícolas e de construção (linha verde).')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+        </ul>
+        <!-- Rodapé repetido -->
+         <div class="flex flex-col sm:flex-row justify-between items-center w-full mt-auto pt-6 border-t border-gray-300 space-y-4 sm:space-y-0">
+            <div class="flex flex-col items-center sm:items-start">
+                <p class="title-arial-black text-sm font-extrabold text-red-600">REPRESENTANTE COMERCIAL</p>
+                <p class="title-arial-black text-sm font-extrabold text-red-600">ALISON B. RIBEIRO</p>
+                <a href="https://wa.me/5527995072994" target="_blank" class="flex items-center space-x-1 text-green-600 hover:text-green-700 mt-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.58 3.58a10 10 0 10-9.16 9.16c0 1.65.4 3.21 1.13 4.6L3 18.88l1.54-.52a9.96 9.96 0 004.6 1.13 10 10 0 009.16-9.16 9.96 9.96 0 00-1.13-4.6L16.88 3l-.52 1.54zm-3.58 9.95c-.2-.1-.59-.29-.68-.33-.09-.04-.16-.06-.22.06-.07.12-.26.33-.32.39-.06.06-.12.07-.22.02-.1-.04-1.14-.42-2.17-1.34-.8-.72-1.34-1.61-1.49-1.89-.15-.28-.01-.43.09-.55.09-.1.2-.26.29-.39.1-.12.13-.2.2-.33.06-.12.03-.22-.02-.33-.04-.1-.46-1.1-.63-1.5-.17-.4-.34-.34-.46-.34h-.22c-.1 0-.26.03-.39.15-.13.12-.5.48-.5 1.18s.51 1.37.58 1.47c.07.1 1.01 1.61 2.45 2.28.34.16.6.26.81.33.3.1.55.09.75-.06.23-.17.68-.78.78-.93.1-.15.1-.28.07-.33z"></path></svg>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            <button onclick="openDiagnosisModal()" class="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 text-lg font-bold shadow-lg">
+                Diagnóstico Rápido ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Página Globo Retífica -->
+    <div id="retificaBanner" class="bg-white text-gray-800 rounded-lg shadow-md p-8 max-w-4xl w-full flex flex-col items-center text-center">
+        <button onclick="showPage('mainPage')" class="self-start mb-6 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 text-base">
+            &larr; Voltar
+        </button>
+        <div class="mb-8 p-4 bg-white rounded-lg shadow-inner">
+            <h2 class="text-3xl font-extrabold tracking-tight text-blue-800">GLOBO RETÍFICA</h2>
+        </div>
+        <h1 class="text-xl font-extrabold mb-6 tracking-tight text-red-600">SERVIÇOS OFERECIDOS</h1>
+        <ul class="text-sm list-disc list-inside space-y-3 mb-10 text-left w-full max-w-md text-blue-800">
+            <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    USINAGEM EM CABEÇOTE
+                </span>
+                <button onclick="getServiceDescription('USINAGEM EM CABEÇOTE', 'Serviços completos de retífica e usinagem em cabeçotes de motor.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    TESTE DE TRINCA EM CABEÇOTE
+                </span>
+                <button onclick="getServiceDescription('TESTE DE TRINCA EM CABEÇOTE', 'Inspeção e teste de trincas em cabeçotes utilizando Magnaflux e outros métodos.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    USINAGEM EM BLOCO
+                </span>
+                <button onclick="getServiceDescription('USINAGEM EM BLOCO', 'Retífica e usinagem de blocos de motor, incluindo brunimento e plaina.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    USINAGEM EM EIXO (COMANDO E VIRABREQUIM)
+                </span>
+                <button onclick="getServiceDescription('USINAGEM EM EIXO', 'Retífica e balanceamento de eixos de comando e virabrequins.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    REMOÇÃO E INSTALAÇÃO
+                </span>
+                <button onclick="getServiceDescription('REMOÇÃO E INSTALAÇÃO', 'Serviço de remoção e instalação de motores e componentes no veículo.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2 border-b pb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    MONTAGEM
+                </span>
+                <button onclick="getServiceDescription('MONTAGEM', 'Montagem completa de motores retificados com garantia de qualidade.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+             <li class="flex flex-col items-start w-full mb-2">
+                <span class="flex items-center font-semibold">
+                    <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    RETÍFICA EM GERAL DE MOTORES A DIESEL MÓVEIS E ESTACIONÁRIOS (MULTIMARCAS)
+                </span>
+                <button onclick="getServiceDescription('RETÍFICA EM GERAL', 'Serviço completo de retífica para motores diesel de todas as marcas, móveis ou estacionários.')" class="self-end mt-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 text-xs">Saiba Mais ✨</button>
+            </li>
+        </ul>
+        <!-- Rodapé repetido -->
+         <div class="flex flex-col sm:flex-row justify-between items-center w-full mt-auto pt-6 border-t border-gray-300 space-y-4 sm:space-y-0">
+            <div class="flex flex-col items-center sm:items-start">
+                <p class="title-arial-black text-sm font-extrabold text-red-600">REPRESENTANTE COMERCIAL</p>
+                <p class="title-arial-black text-sm font-extrabold text-red-600">ALISON B. RIBEIRO</p>
+                <a href="https://wa.me/5527995072994" target="_blank" class="flex items-center space-x-1 text-green-600 hover:text-green-700 mt-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.58 3.58a10 10 0 10-9.16 9.16c0 1.65.4 3.21 1.13 4.6L3 18.88l1.54-.52a9.96 9.96 0 004.6 1.13 10 10 0 009.16-9.16 9.96 9.96 0 00-1.13-4.6L16.88 3l-.52 1.54zm-3.58 9.95c-.2-.1-.59-.29-.68-.33-.09-.04-.16-.06-.22.06-.07.12-.26.33-.32.39-.06.06-.12.07-.22.02-.1-.04-1.14-.42-2.17-1.34-.8-.72-1.34-1.61-1.49-1.89-.15-.28-.01-.43.09-.55.09-.1.2-.26.29-.39.1-.12.13-.2.2-.33.06-.12.03-.22-.02-.33-.04-.1-.46-1.1-.63-1.5-.17-.4-.34-.34-.46-.34h-.22c-.1 0-.26.03-.39.15-.13.12-.5.48-.5 1.18s.51 1.37.58 1.47c.07.1 1.01 1.61 2.45 2.28.34.16.6.26.81.33.3.1.55.09.75-.06.23-.17.68-.78.78-.93.1-.15.1-.28.07-.33z"></path></svg>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+            <button onclick="openDiagnosisModal()" class="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 text-lg font-bold shadow-lg">
+                Diagnóstico Rápido ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para Descrição/Diagnóstico -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle" class="text-xl font-bold mb-4">Detalhes</h3>
+            <p id="modalDescription" class="mb-4">Carregando...</p>
+            <!-- Elementos específicos do Diagnóstico Rápido -->
+            <textarea id="problemInput" class="problem-input" placeholder="Descreva o problema do veículo aqui..."></textarea>
+            <button id="diagnoseButton" onclick="submitDiagnosis()" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200">Obter Diagnóstico</button>
+            <p id="loadingIndicator" class="loading-indicator">Processando diagnóstico...</p>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar a página correta e esconder as outras
+        function showPage(pageId) {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('servicesBanner').style.display = 'none';
+            document.getElementById('eletrodieselBanner').style.display = 'none';
+            document.getElementById('retificaBanner').style.display = 'none';
+
+            document.getElementById(pageId).style.display = 'flex'; // Usar flex para manter o layout
+        }
+
+        // Função para fechar o modal
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        // Função para abrir o modal de descrição de serviço
+        function getServiceDescription(serviceName, description) {
+            document.getElementById('modalTitle').innerText = serviceName;
+            document.getElementById('modalDescription').innerText = description;
+            document.getElementById('problemInput').style.display = 'none';
+            document.getElementById('diagnoseButton').style.display = 'none';
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        // Função para abrir o modal de diagnóstico
+        function openDiagnosisModal() {
+            document.getElementById('modalTitle').innerText = 'Diagnóstico Rápido';
+            document.getElementById('modalDescription').innerText = 'Por favor, descreva o problema do seu veículo abaixo para receber uma sugestão inicial.';
+            document.getElementById('problemInput').style.display = 'block';
+            document.getElementById('problemInput').value = ''; // Limpa o campo
+            document.getElementById('diagnoseButton').style.display = 'block';
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        // Função para submeter o diagnóstico (simulado)
+        async function submitDiagnosis() {
+            const problem = document.getElementById('problemInput').value;
+            if (!problem) {
+                alert('Por favor, descreva o problema.');
+                return;
+            }
+
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('modalDescription').innerText = ''; // Limpa descrição anterior
+            document.getElementById('problemInput').style.display = 'none';
+            document.getElementById('diagnoseButton').style.display = 'none';
+
+            // Simulação de chamada à API
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Simula espera da rede
+
+            // Resposta simulada
+            const simulatedResponse = `Com base na descrição "${problem}", sugerimos verificar [Componente A] e [Componente B]. Recomendamos agendar uma avaliação completa com nossos especialistas para um diagnóstico preciso. Entre em contato pelo WhatsApp para mais detalhes.`;
+            document.getElementById('modalDescription').innerText = simulatedResponse;
+            document.getElementById('loadingIndicator').style.display = 'none';
+
+            /*
+            // Código original da API Gemini (requer chave e pode ter custos)
+            try {
+                let chatHistory = [];
+                const allServices = [
+                    'TURBINA', 'SETOR DE DIREÇÃO', 'COMPRESSOR', 'BOMBA HIDRÁULICA', 'CUICA DE FREIO',
+                    'COLETOR DE ESCAPE', 'SECADOR DE AR', 'SISTEMA PNEUMÁTICO EM GERAL',
+                    'BOMBA DE ALTA', 'UNIDADE', 'BOMBA INJETORA', 'BICO INJETOR',
+                    'DIAGNÓSTICO COMPUTADORIZADO', 'SISTEMA CATERPILLAR', 'LINHA VERDE',
+                    'USINAGEM EM CABEÇOTE', 'TESTE DE TRINCA EM CABEÇOTE', 'USINAGEM EM BLOCO',
+                    'USINAGEM EM EIXO (COMANDO E VIRABREQUIM)', 'REMOÇÃO E INSTALAÇÃO', 'MONTAGEM',
+                    'RETÍFICA EM GERAL DE MOTORES A DIESEL MÓVEIS E ESTACIONÁRIOS (MULTIMARCAS)'
+                ].join(', ');
+                const prompt = `Um veículo está apresentando o seguinte problema: "${problem}". Considerando os serviços automotivos de ${allServices}, forneça uma possível causa ou sugestão de próximos passos em português. Seja conciso, com no máximo 80 palavras, e profissional.`;
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // A chave da API seria necessária aqui
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    document.getElementById('modalDescription').innerText = text;
+                } else {
+                    document.getElementById('modalDescription').innerText = 'Não foi possível realizar o diagnóstico no momento. Tente novamente.';
+                }
+            } catch (error) {
+                console.error('Erro ao chamar a API Gemini para diagnóstico:', error);
+                document.getElementById('modalDescription').innerText = 'Ocorreu um erro ao carregar o diagnóstico. Por favor, tente novamente.';
+            } finally {
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+            */
+        }
+
+        // Garante que a página principal seja exibida ao carregar
+        document.addEventListener('DOMContentLoaded', (event) => {
+            showPage('mainPage');
+        });
+
+    </script>
+</body>
+</html>
+
